@@ -1,100 +1,165 @@
-# 32-bit-Pipelined-CPU
-5-Stage Pipelined MIPS32 Processor
-Built using Verilog | RTL-based CPU Design | NPTEL Guided Project
+# 🚀 5-Stage Pipelined MIPS32 Processor
 
-Overview
-This project is a custom-designed 32-bit 5-stage pipelined MIPS32 processor, developed as part of the NPTEL course Hardware Modeling using Verilog by Prof. Indranil Sengupta. It supports MIPS-style instructions and handles various pipeline hazards using efficient architectural techniques.
+> **Verilog HDL | RTL Design | Computer Architecture | NPTEL Guided Project**
 
-The processor simulates instruction execution through five stages:
-IF → ID → EX → MEM → WB, with custom hazard resolution mechanisms for data, control, and structural hazards.
+A custom-designed **32-bit 5-stage pipelined MIPS32 processor** implemented in **Verilog HDL**. This project was developed as part of the **NPTEL course "Hardware Modeling using Verilog"** by **Prof. Indranil Sengupta**. The processor supports a subset of MIPS32 instructions and demonstrates pipelined execution with efficient handling of data, control, and structural hazards.
 
-Instruction Format
-The MIPS32 instruction set architecture supports three types of instructions:
+---
 
-Instruction Formats
+## 📖 Overview
 
-R-type: Used for register-to-register ALU operations
-I-type: Used for immediate operations, memory access, and branches
-J-type: Used for jump instructions (not included in this processor)
-Key Features
-Fully functional 32-bit pipelined CPU in Verilog
-Supports 14 custom MIPS-style instructions (R-type, I-type, load/store, branch, halt)
-Efficient handling of data, control, and structural hazards
-Branch resolution using early condition check and pipeline flushing
-Memory and instruction storage using separate modules
-Two-phase clocking system to separate pipeline stages
-Architecture and Data Flow
-The processor follows the classic 5-stage pipeline and manages instruction/control flow through a datapath consisting of the following elements:
+This processor implements the classic **5-stage MIPS pipeline**:
 
-Processor Datapath
+```
+Instruction Fetch (IF)
+        ↓
+Instruction Decode (ID)
+        ↓
+Execute (EX)
+        ↓
+Memory Access (MEM)
+        ↓
+Write Back (WB)
+```
 
-Pipelined Stages
-IF (Instruction Fetch)
-Fetches instruction from memory and calculates next PC.
+Each instruction advances one stage every clock cycle, allowing multiple instructions to execute concurrently and improving overall throughput.
 
-ID (Instruction Decode & Register Fetch)
-Decodes opcode, reads registers, and performs sign extension for immediate values.
+---
 
-EX (Execution/Address Calculation)
-Executes ALU operations or computes branch target addresses.
+## ✨ Features
 
-MEM (Memory Access)
-Loads data from memory or writes to memory.
+- 32-bit MIPS32 Processor
+- Fully pipelined 5-stage architecture
+- Implemented entirely in Verilog HDL
+- Supports **14 MIPS-style instructions**
+- Handles:
+  - Data Hazards
+  - Control Hazards
+  - Structural Hazards
+- Separate Instruction & Data Memory
+- Two-phase clocking architecture
+- Register File with 32 General Purpose Registers
+- Branch handling using pipeline flushing
+- Synthesizable RTL Design
 
-WB (Write Back)
-Writes result back to register file.
+---
 
-Instruction Set
-Opcode	Instruction	Type	Description
-000000	ADD	RR-ALU	Register-register addition
-000001	SUB	RR-ALU	Register-register subtraction
-000010	AND	RR-ALU	Bitwise AND
-000011	OR	RR-ALU	Bitwise OR
-000100	SLT	RR-ALU	Set less than
-000101	MUL	RR-ALU	Multiplication
-001000	LW	LOAD	Load word from memory
-001001	SW	STORE	Store word to memory
-001010	ADDI	RM-ALU	Add immediate
-001011	SUBI	RM-ALU	Subtract immediate
-001100	SLTI	RM-ALU	Set less than immediate
-001101	BNEQZ	BRANCH	Branch if not equal to zero
-001110	BEQZ	BRANCH	Branch if equal to zero
-111111	HLT	HALT	Halt the processor
-Clock Cycle Execution
-The pipelined design allows multiple instructions to be in different stages of execution simultaneously. Below is a visual representation:
+# 🏗 Pipeline Architecture
 
-Pipeline Clock Cycle
+The processor follows the standard five pipeline stages.
 
-Each instruction progresses one stage per clock cycle, and the pipeline is kept busy with new instructions entering every cycle.
+| Stage | Function |
+|-------|----------|
+| **IF** | Fetch instruction and update Program Counter |
+| **ID** | Decode instruction and read register operands |
+| **EX** | Perform ALU operations / Address calculation |
+| **MEM** | Read from or write to Data Memory |
+| **WB** | Write result back to Register File |
 
-Hazard Handling
-Data Hazards
-Managed using two-phase clocking and controlled stalling. This ensures that operands are ready before being used in the ALU or memory stages.
+---
 
-Control Hazards
-Handled by evaluating branch conditions in the EX stage. If a branch is taken, the IF and ID stages are flushed, resulting in minimal penalty.
+# 📌 Supported Instruction Set
 
-Structural Hazards
-Eliminated by using separate instruction and data memories, and a two-read, one-write register file.
+## R-Type Instructions
 
-Design Decisions
-Inter-stage pipeline registers (e.g., IF_ID_IR, ID_EX_A) store intermediate values and control signals.
-Memory is modeled as a 1KB array (Mem[1023:0]).
-Register file consists of 32 general-purpose registers (Reg[31:0]).
-Custom TYPE control values distinguish instruction categories in pipeline stages.
-Technologies Used
-Verilog HDL
-RTL Design Methodology
-Digital Logic and Computer Architecture
-Simulated using ModelSim, Vivado, or other compatible tools
-Project Highlights
-Built a functional pipelined processor with support for branching, arithmetic, and memory operations
-Gained practical exposure to instruction-level parallelism and pipeline design
-Implemented clean hazard handling and flushing mechanisms
-Reinforced key concepts of datapath design and control signal management
-How to Run
-Load the Verilog source code into a simulator (e.g., Vivado, ModelSim).
-Initialize Mem with encoded instruction binaries.
-Use alternating clock signals (clk1 and clk2) to simulate pipelined flow.
-Observe pipeline register contents (IF_ID_IR, ID_EX_A, etc.) and register values.
-Validate memory outputs and register file for correctness
+| Opcode | Instruction | Description |
+|---------|------------|-------------|
+| 000000 | ADD | Register Addition |
+| 000001 | SUB | Register Subtraction |
+| 000010 | AND | Bitwise AND |
+| 000011 | OR | Bitwise OR |
+| 000100 | SLT | Set Less Than |
+| 000101 | MUL | Multiplication |
+
+---
+
+## I-Type Instructions
+
+| Opcode | Instruction | Description |
+|---------|------------|-------------|
+| 001000 | LW | Load Word |
+| 001001 | SW | Store Word |
+| 001010 | ADDI | Add Immediate |
+| 001011 | SUBI | Subtract Immediate |
+| 001100 | SLTI | Set Less Than Immediate |
+| 001101 | BNEQZ | Branch if Not Equal to Zero |
+| 001110 | BEQZ | Branch if Equal to Zero |
+
+---
+
+## Special Instruction
+
+| Opcode | Instruction | Description |
+|---------|------------|-------------|
+| 111111 | HLT | Halt Processor |
+
+---
+
+# ⚙ Hazard Handling
+
+### 🔹 Data Hazards
+- Managed using **two-phase clocking**.
+- Pipeline stalling ensures operands are available before execution.
+
+### 🔹 Control Hazards
+- Branch decision performed in the **EX stage**.
+- Taken branches flush instructions in IF and ID stages.
+
+### 🔹 Structural Hazards
+- Eliminated by using:
+  - Separate Instruction and Data Memories
+  - 2-read / 1-write Register File
+
+---
+
+# 🧠 Processor Organization
+
+The design consists of:
+
+- Program Counter (PC)
+- Instruction Memory
+- Data Memory
+- Register File (32 × 32-bit)
+- ALU
+- Pipeline Registers
+- Control Logic
+- Sign Extension Unit
+
+Pipeline registers include:
+
+```
+IF_ID_IR
+IF_ID_NPC
+
+ID_EX_IR
+ID_EX_A
+ID_EX_B
+ID_EX_IMM
+
+EX_MEM_IR
+EX_MEM_ALUOut
+EX_MEM_B
+
+MEM_WB_IR
+MEM_WB_ALUOut
+MEM_WB_LMD
+```
+
+---
+--
+
+
+# 🚀 Future Improvements
+
+- Data Forwarding Unit
+- Hazard Detection Unit
+- Jump and Jump-and-Link Instructions
+- Branch Prediction
+- Cache Memory
+- Exception & Interrupt Handling
+- Full MIPS32 ISA Support
+
+---
+
+
+## ⭐ If you found this project useful, consider giving it a star!
